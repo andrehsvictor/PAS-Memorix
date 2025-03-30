@@ -19,7 +19,7 @@ export default function LoginPage() {
   });
 
   const onSubmit = (data: LoginFormInputs) => {
-    // Adicione sua lógica de login aqui
+    // TODO: Handle form submission
     console.log("Form submitted:", data);
   };
 
@@ -98,7 +98,10 @@ export default function LoginPage() {
             Entrar
           </button>
           <div className="mt-4 text-left text-sm">
-            <a href="#" className="text-primary hover:text-primary-hover hover:underline transition duration-300">
+            <a
+              href="#"
+              className="text-primary hover:text-primary-hover hover:underline transition duration-300"
+            >
               Criar conta
             </a>
           </div>
