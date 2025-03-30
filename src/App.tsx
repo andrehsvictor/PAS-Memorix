@@ -1,5 +1,6 @@
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import LoginPage from "./pages/login/login-page";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
               <div className="text-3xl font-bold underline">Hello world!</div>
             }
           />
+          <Route path="login" element={<LoginPage />} />
           <Route
             path="about"
             element={<div className="text-3xl font-bold underline">About</div>}
