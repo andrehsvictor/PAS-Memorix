@@ -32,13 +32,17 @@ export default function LoginPage() {
   return (
     <>
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+        {/* Formulário de Login */}
         <form
           className="bg-white p-6 rounded-md border border-gray-300 w-[25vw]"
           onSubmit={handleSubmit(onSubmit)}
         >
+          {/* Título */}
           <h1 className="text-4xl font-bold mb-4 text-center text-primary">
             Memorix
           </h1>
+          {/* Campos do Formulário */}
+          {/* E-mail */}
           <div className="mb-4">
             <label
               htmlFor="email"
@@ -67,6 +71,7 @@ export default function LoginPage() {
               </div>
             )}
           </div>
+          {/* Senha */}
           <div className="mb-4">
             <label
               htmlFor="password"

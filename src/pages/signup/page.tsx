@@ -39,13 +39,17 @@ export default function SignupPage() {
   return (
     <>
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+        {/* Formulário de Cadastro */}
         <form
           className="bg-white p-6 rounded-md border border-gray-300 w-[25vw]"
           onSubmit={handleSubmit(onSubmit)}
         >
+          {/* Título */}
           <h1 className="text-4xl font-bold mb-4 text-center text-primary">
             Memorix
           </h1>
+          {/* Campos do Formulário */}
+          {/* Nome */}
           <div className="mb-4">
             <label
               htmlFor="name"
@@ -72,6 +76,7 @@ export default function SignupPage() {
               </div>
             )}
           </div>
+          {/* E-mail */}
           <div className="mb-4">
             <label
               htmlFor="email"
@@ -100,6 +105,7 @@ export default function SignupPage() {
               </div>
             )}
           </div>
+          {/* Senha */}
           <div className="mb-4">
             <label
               htmlFor="password"
@@ -126,6 +132,7 @@ export default function SignupPage() {
               </div>
             )}
           </div>
+          {/* Confirmar Senha */}
           <div className="mb-4">
             <label
               htmlFor="confirmPassword"
@@ -150,6 +157,7 @@ export default function SignupPage() {
               </div>
             )}
           </div>
+          {/* Botão de Cadastro */}
           <button
             type="submit"
             className={`w-full text-white py-2 rounded transition duration-300 ${

@@ -4,6 +4,7 @@ import LoginPage from "./pages/login/page";
 import NotFoundPage from "./pages/not-found/page";
 import SignupPage from "./pages/signup/page";
 import { AuthProvider } from "./contexts/auth-context";
+import DecksPage from "./pages/decks/page";
 
 function App() {
   return (
@@ -14,12 +15,7 @@ function App() {
             <Route path="login" element={<LoginPage />} />
             <Route path="signup" element={<SignupPage />} />
             <Route path="*" element={<NotFoundPage />} />
-            <Route
-              index
-              element={
-                <div className="text-3xl font-bold underline">Hello world!</div>
-              }
-            />
+            <Route index element={<DecksPage />} />
           </Route>
         </Routes>
       </AuthProvider>
