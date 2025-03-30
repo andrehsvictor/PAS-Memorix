@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+* {
+  font-family: "Inter", sans-serif;
+}
+
 @theme {
-  --color-primary: oklch(0.2 0.5 0.5);
+  --color-primary: #451bff;
+  --color-primary-hover: #5d2bff;
+  --color-primary-active: #7f4dff;
+  --color-primary-focus: #9f6bff;
+  --color-primary-disabled: #b3a2ff;
 }
