@@ -2,31 +2,38 @@ import { useForm } from "react-hook-form";
 import { GoXCircle } from "react-icons/go";
 import { useAuth } from "../../contexts/auth-context";
 
-interface LoginFormInputs {
+interface SignupPageProps {
+  name: string;
   email: string;
   password: string;
+  confirmPassword: string;
 }
 
-export default function LoginPage() {
+export default function SignupPage() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isValid, touchedFields },
-  } = useForm<LoginFormInputs>({
+  } = useForm<SignupPageProps>({
     mode: "onChange",
     defaultValues: {
+      name: "",
       email: "",
       password: "",
+      confirmPassword: "",
     },
   });
-  const { login } = useAuth();
+  const { signup } = useAuth();
 
-  const onSubmit = async (data: LoginFormInputs) => {
-    const { success, error } = await login(data.email, data.password);
+  const onSubmit = async (data: SignupPageProps) => {
+    const { name, email, password } = data;
+    const { success, error } = await signup(name, email, password);
     if (!success) {
       alert(error);
       return;
     }
+    alert("Conta criada com sucesso!");
   };
 
   return (
@@ -39,6 +46,32 @@ export default function LoginPage() {
           <h1 className="text-4xl font-bold mb-4 text-center text-primary">
             Memorix
           </h1>
+          <div className="mb-4">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Nome
+            </label>
+            <input
+              id="name"
+              {...register("name", {
+                required: "Nome é obrigatório",
+                minLength: {
+                  value: 3,
+                  message: "Nome deve ser maior que 3 caracteres",
+                },
+              })}
+              className="mt-1 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-primary p-2"
+              type="text"
+            />
+            {touchedFields.name && errors.name && (
+              <div className="flex items-center text-red-500 text-sm mt-1">
+                <GoXCircle className="mr-1" />
+                {errors.name.message}
+              </div>
+            )}
+          </div>
           <div className="mb-4">
             <label
               htmlFor="email"
@@ -93,6 +126,30 @@ export default function LoginPage() {
               </div>
             )}
           </div>
+          <div className="mb-4">
+            <label
+              htmlFor="confirmPassword"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Confirmar Senha
+            </label>
+            <input
+              id="confirmPassword"
+              type="password"
+              {...register("confirmPassword", {
+                required: "Confirmação de senha é obrigatória",
+                validate: (value) =>
+                  value === watch("password") || "As senhas não coincidem",
+              })}
+              className="mt-1 block w-full border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-primary p-2"
+            />
+            {touchedFields.confirmPassword && errors.confirmPassword && (
+              <div className="flex items-center text-red-500 text-sm mt-1">
+                <GoXCircle className="mr-1" />
+                {errors.confirmPassword.message}
+              </div>
+            )}
+          </div>
           <button
             type="submit"
             className={`w-full text-white py-2 rounded transition duration-300 ${
@@ -103,16 +160,8 @@ export default function LoginPage() {
             `}
             disabled={!isValid}
           >
-            Entrar
+            Criar Conta
           </button>
-          <div className="mt-4 text-left text-sm">
-            <a
-              href="/signup"
-              className="text-primary hover:text-primary-hover hover:underline transition duration-300"
-            >
-              Criar conta
-            </a>
-          </div>
         </form>
       </div>
     </>
