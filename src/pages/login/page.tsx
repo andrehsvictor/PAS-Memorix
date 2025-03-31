@@ -7,7 +7,7 @@ interface LoginFormInputs {
   password: string;
 }
 
-export default function LoginPage() {
+export default function Page() {
   const {
     register,
     handleSubmit,

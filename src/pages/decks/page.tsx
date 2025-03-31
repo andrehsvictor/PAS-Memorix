@@ -1,26 +1,41 @@
-export default function DecksPage() {
+import { GoCopy, GoVersions } from "react-icons/go";
+import { RxAvatar } from "react-icons/rx";
+
+export default function Page() {
   return (
     <>
       <div className="flex items-center justify-between bg-primary p-3 w-full fixed top-0 z-10">
         <div className="flex items-center flex-shrink-0 text-white mr-6">
           <span className="font-semibold text-3xl tracking-tight">Memorix</span>
         </div>
-        {/* Adicionei space-x-8 para criar espaço entre os elementos */}
-        <div className="flex-grow lg:flex lg:items-center lg:w-auto lg:justify-end">
-          <div className="text-sm lg:flex-grow lg:flex lg:justify-end space-x-8">
-            <a
-              href="#"
-              className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-gray-200"
-            >
-              Decks
-            </a>
-            <a
-              href="#"
-              className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-gray-200"
-            >
-              Cards
-            </a>
+        <div className="flex items-center gap-10">
+          <div className="flex lg:flex lg:items-center lg:w-auto lg:justify-end">
+            <div className="text-sm lg:flex-grow lg:flex lg:justify-end gap-4">
+              <a
+                href="#"
+                className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-gray-200 font-semibold"
+              >
+                <GoVersions className="inline-block mr-1" strokeWidth={1.5} />
+                Baralhos
+              </a>
+              <a
+                href="#"
+                className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-gray-200 font-semibold"
+              >
+                <GoCopy className="inline-block mr-1" strokeWidth={1.5} />
+                Cartões
+              </a>
+            </div>
           </div>
+          <a
+            href="#"
+            className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-gray-200 font-semibold"
+          >
+            <RxAvatar
+              className="inline-block mr-1 text-3xl"
+              strokeWidth={0.05}
+            />
+          </a>
         </div>
       </div>
     </>

@@ -1,10 +1,10 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
+import { AuthProvider } from "./contexts/auth-context";
+import DecksPage from "./pages/decks/page";
 import LoginPage from "./pages/login/page";
 import NotFoundPage from "./pages/not-found/page";
 import SignupPage from "./pages/signup/page";
-import { AuthProvider } from "./contexts/auth-context";
-import DecksPage from "./pages/decks/page";
 
 function App() {
   return (
