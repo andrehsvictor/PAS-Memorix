@@ -1,11 +1,39 @@
-import { GoCopy, GoPlus, GoSearch, GoVersions } from "react-icons/go";
-import { RxAvatar } from "react-icons/rx";
-import Navbar from "./components/navbar";
 import clsx from "clsx";
-import SearchBar from "./components/searchbar";
+import { useState } from "react";
+import { GoPlus } from "react-icons/go";
 import FloatingButton from "../../components/floating-button";
+import type Deck from "../../types/deck";
+import DeckComponent from "./components/deck";
+import Navbar from "./components/navbar";
+import SearchBar from "./components/searchbar";
 
 export default function Page() {
+  const [decks, setDecks] = useState<Deck[]>([
+    {
+      id: "1",
+      name: "Baralho 1",
+      description: "Descrição do baralho 1",
+      userId: "user1",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+    {
+      id: "2",
+      name: "Baralho 2",
+      description: "Descrição do baralho 2",
+      userId: "user1",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+    {
+      id: "3",
+      name: "Baralho 3",
+      description: "Descrição do baralho 3",
+      userId: "user1",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+  ]);
   return (
     <>
       {/* Background */}
@@ -30,18 +58,14 @@ export default function Page() {
             )}
           >
             {/* Card de baralho */}
-            <div className="bg-white shadow-md rounded-lg border border-gray-300 p-4">
-              <h2 className="text-lg font-semibold mb-2">Baralho 1</h2>
-              <p className="text-gray-600">Descrição do baralho 1.</p>
-              <div className="flex justify-between mt-4">
-                <button className="bg-primary text-white py-1 px-3 rounded-md">
-                  Editar
-                </button>
-                <button className="bg-red-500 text-white py-1 px-3 rounded-md">
-                  Deletar
-                </button>
-              </div>
-            </div>
+            {decks.map((deck) => (
+              <DeckComponent
+                key={deck.id}
+                deck={deck}
+                onDelete={(deckId) => console.log("Deletar baralho", deckId)}
+                onEdit={(deck) => console.log("Editar baralho", deck)}
+              />
+            ))}
           </section>
         </main>
       </div>
