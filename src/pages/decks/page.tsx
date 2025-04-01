@@ -1,40 +1,33 @@
 import clsx from "clsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { BsExclamationCircle } from "react-icons/bs";
 import { GoPlus } from "react-icons/go";
 import FloatingButton from "../../components/floating-button";
 import type Deck from "../../types/deck";
 import DeckComponent from "./components/deck";
 import Navbar from "./components/navbar";
 import SearchBar from "./components/searchbar";
-import { BsExclamationCircle } from "react-icons/bs";
 
 export default function Page() {
-  const [decks, setDecks] = useState<Deck[]>([
-    {
-      id: "1",
-      name: "Baralho 1",
-      description: "Descrição do baralho 1",
-      userId: "user1",
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-    {
-      id: "2",
-      name: "Baralho 2",
-      description: "Descrição do baralho 2",
-      userId: "user1",
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-    {
-      id: "3",
-      name: "Baralho 3",
-      description: "Descrição do baralho 3",
-      userId: "user1",
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-  ]);
+  // const { decks } = useFetchDecks();
+  const [decks, setDecks] = useState<Deck[]>([]);
+
+  useEffect(() => {
+    for (let i = 0; i < 10; i++) {
+      setDecks((prev) => [
+        ...prev,
+        {
+          id: `deck-${i}`,
+          name: `Baralho ${i}`,
+          description: `Descrição do baralho ${i}`,
+          userId: "user-1",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ]);
+    }
+  }, []);
+
   return (
     <>
       {/* Background */}
@@ -50,6 +43,31 @@ export default function Page() {
             Adicionar baralho
           </FloatingButton>
 
+          {/* Notificação da quantidade de cartões para revisar */}
+          <div
+            className={clsx(
+              "flex items-center justify-between",
+              "bg-white rounded-lg p-4",
+              "border border-primary",
+              "w-[80%]"
+            )}
+          >
+            <div className="flex items-center">
+              <BsExclamationCircle className="text-2xl text-primary mr-2" />
+              <span className="text-gray-700">
+                Você tem 5 cartões para revisar
+              </span>
+            </div>
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={() => console.log("Revisar cartões")}
+                className="bg-primary text-white rounded-lg px-4 py-2 hover:bg-primary-hover transition duration-200"
+              >
+                Revisar cartões
+              </button>
+            </div>
+          </div>
+
           {/* Seção dos baralhos */}
           <section
             className={clsx(
@@ -57,26 +75,15 @@ export default function Page() {
                 "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4":
                   decks.length > 0,
               },
-              // Se houver baralhos, exibe os cards em uma grade
-              // Caso contrário, exibe uma mensagem centralizada
               "flex flex-col items-center justify-center",
               "bg-white rounded-lg p-10",
+              "overflow-y-scroll",
+              "h-[50vh]",
               "w-[80%] mt-5"
             )}
           >
             {/* Card de baralho */}
             {decks.length === 0 && (
-              // Se não houver baralhos, exibe uma mensagem com um ícone de exclamação
-
-              // <div className="flex flex-col items-center justify-center w-full h-full">
-              //   <BsExclamationCircle className="text-6xl text-gray-400 mb-4" />
-              //   <h2 className="text-2xl font-bold text-gray-700">
-              //     Nenhum baralho encontrado
-              //   </h2>
-              //   <p className="text-gray-500">
-              //     Crie um novo baralho para começar a estudar.
-              //   </p>
-              // </div>
               <div className="flex flex-col items-center justify-center w-full h-full p-10">
                 <BsExclamationCircle className="text-6xl text-gray-400 mb-4" />
                 <h2 className="text-2xl font-bold text-gray-700 text-center">

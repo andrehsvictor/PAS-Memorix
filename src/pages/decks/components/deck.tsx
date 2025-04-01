@@ -9,7 +9,7 @@ interface DeckProps {
 export default function DeckComponent({ deck, onDelete, onEdit }: DeckProps) {
   return (
     <>
-      <div className="bg-white shadow-md rounded-lg border border-gray-300 p-4">
+      <div className="bg-white rounded-lg border border-gray-300 p-4">
         <h2 className="text-lg font-semibold mb-2">{deck.name}</h2>
         <p className="text-gray-600">{deck.description}</p>
         <div className="flex justify-between mt-4">

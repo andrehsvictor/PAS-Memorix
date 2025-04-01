@@ -13,6 +13,7 @@ function App() {
         <Route path="signup" element={<SignupPage />} />
         <Route path="*" element={<NotFoundPage />} />
         <Route index element={<DecksPage />} />
+        <Route path="decks" element={<DecksPage />} />
       </Route>
     </Routes>
   );
