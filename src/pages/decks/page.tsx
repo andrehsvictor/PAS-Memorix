@@ -1,42 +1,49 @@
-import { GoCopy, GoVersions } from "react-icons/go";
+import { GoCopy, GoPlus, GoSearch, GoVersions } from "react-icons/go";
 import { RxAvatar } from "react-icons/rx";
+import Navbar from "./components/navbar";
+import clsx from "clsx";
+import SearchBar from "./components/searchbar";
+import FloatingButton from "../../components/floating-button";
 
 export default function Page() {
   return (
     <>
-      <div className="flex items-center justify-between bg-primary p-3 w-full fixed top-0 z-10">
-        <div className="flex items-center flex-shrink-0 text-white mr-6">
-          <span className="font-semibold text-3xl tracking-tight">Memorix</span>
-        </div>
-        <div className="flex items-center gap-10">
-          <div className="flex lg:flex lg:items-center lg:w-auto lg:justify-end">
-            <div className="text-sm lg:flex-grow lg:flex lg:justify-end gap-4">
-              <a
-                href="#"
-                className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-gray-200 font-semibold"
-              >
-                <GoVersions className="inline-block mr-1" strokeWidth={1.5} />
-                Baralhos
-              </a>
-              <a
-                href="#"
-                className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-gray-200 font-semibold"
-              >
-                <GoCopy className="inline-block mr-1" strokeWidth={1.5} />
-                Cartões
-              </a>
-            </div>
-          </div>
-          <a
-            href="#"
-            className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-gray-200 font-semibold"
+      {/* Background */}
+      <div className="bg-slate-200 min-h-screen">
+        <Navbar />
+        <main className="flex flex-col items-center justify-center min-h-scree mt-5 w-full">
+          {/* Barra de pesquisa */}
+          <SearchBar onSearch={(query) => console.log(query)} />
+
+          {/* Botão flutuante de adicionar baralho */}
+          <FloatingButton onClick={() => console.log("Adicionar baralho")}>
+            <GoPlus className="text-2xl" />
+            Adicionar baralho
+          </FloatingButton>
+
+          {/* Seção dos baralhos */}
+          <section
+            className={clsx(
+              "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4",
+              "bg-white rounded-lg p-10",
+              "w-[80%] mt-5"
+            )}
           >
-            <RxAvatar
-              className="inline-block mr-1 text-3xl"
-              strokeWidth={0.05}
-            />
-          </a>
-        </div>
+            {/* Card de baralho */}
+            <div className="bg-white shadow-md rounded-lg border border-gray-300 p-4">
+              <h2 className="text-lg font-semibold mb-2">Baralho 1</h2>
+              <p className="text-gray-600">Descrição do baralho 1.</p>
+              <div className="flex justify-between mt-4">
+                <button className="bg-primary text-white py-1 px-3 rounded-md">
+                  Editar
+                </button>
+                <button className="bg-red-500 text-white py-1 px-3 rounded-md">
+                  Deletar
+                </button>
+              </div>
+            </div>
+          </section>
+        </main>
       </div>
     </>
   );
