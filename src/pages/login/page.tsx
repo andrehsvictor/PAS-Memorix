@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { GoXCircle } from "react-icons/go";
 import { useAuth } from "../../contexts/auth-context";
+import clsx from "clsx";
 
 interface LoginFormInputs {
   email: string;
@@ -100,12 +101,16 @@ export default function Page() {
           </div>
           <button
             type="submit"
-            className={`w-full text-white py-2 rounded transition duration-300 ${
+            className={clsx(
+              "w-full text-white py-2 rounded transition duration-300",
               isValid
                 ? "bg-primary hover:bg-primary-hover cursor-pointer"
                 : "bg-primary-disabled cursor-not-allowed"
-            }
-            `}
+            )}
+            // className={`w-full text-white py-2 rounded transition duration-300 ${
+            // isValid
+            //   ? "bg-primary hover:bg-primary-hover cursor-pointer"
+            //   : "bg-primary-disabled cursor-not-allowed"
             disabled={!isValid}
           >
             Entrar
