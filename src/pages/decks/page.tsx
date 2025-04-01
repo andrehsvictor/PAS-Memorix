@@ -10,30 +10,30 @@ import { BsExclamationCircle } from "react-icons/bs";
 
 export default function Page() {
   const [decks, setDecks] = useState<Deck[]>([
-    // {
-    //   id: "1",
-    //   name: "Baralho 1",
-    //   description: "Descrição do baralho 1",
-    //   userId: "user1",
-    //   createdAt: new Date(),
-    //   updatedAt: new Date(),
-    // },
-    // {
-    //   id: "2",
-    //   name: "Baralho 2",
-    //   description: "Descrição do baralho 2",
-    //   userId: "user1",
-    //   createdAt: new Date(),
-    //   updatedAt: new Date(),
-    // },
-    // {
-    //   id: "3",
-    //   name: "Baralho 3",
-    //   description: "Descrição do baralho 3",
-    //   userId: "user1",
-    //   createdAt: new Date(),
-    //   updatedAt: new Date(),
-    // },
+    {
+      id: "1",
+      name: "Baralho 1",
+      description: "Descrição do baralho 1",
+      userId: "user1",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+    {
+      id: "2",
+      name: "Baralho 2",
+      description: "Descrição do baralho 2",
+      userId: "user1",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+    {
+      id: "3",
+      name: "Baralho 3",
+      description: "Descrição do baralho 3",
+      userId: "user1",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
   ]);
   return (
     <>
