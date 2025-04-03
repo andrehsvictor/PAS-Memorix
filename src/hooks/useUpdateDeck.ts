@@ -6,7 +6,7 @@ export default function useUpdateDeck() {
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    function update(id: string, updatedDeckData: Partial<Deck>): Deck | null {
+    function update(id: string, updatedDeckData: Partial<Deck>) {
         setIsLoading(true);
         setError(null);
 

@@ -1,32 +1,37 @@
 import clsx from "clsx";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { BsExclamationCircle } from "react-icons/bs";
-import { GoPlus } from "react-icons/go";
+import { GoPlus, GoXCircle } from "react-icons/go";
 import FloatingButton from "../../components/floating-button";
-import type Deck from "../../types/deck";
+import useCreateDeck from "../../hooks/useCreateDeck";
+import useFetchDecks from "../../hooks/useFetchDecks";
 import DeckComponent from "./components/deck";
+import Dialog from "./components/dialog";
 import Navbar from "./components/navbar";
 import SearchBar from "./components/searchbar";
 
-export default function Page() {
-  // const { decks } = useFetchDecks();
-  const [decks, setDecks] = useState<Deck[]>([]);
+interface CreateDeckFormProps {
+  name: string;
+  description?: string;
+}
 
-  useEffect(() => {
-    for (let i = 0; i < 10; i++) {
-      setDecks((prev) => [
-        ...prev,
-        {
-          id: `deck-${i}`,
-          name: `Baralho ${i}`,
-          description: `Descrição do baralho ${i}`,
-          userId: "user-1",
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-      ]);
-    }
-  }, []);
+export default function Page() {
+  const { decks } = useFetchDecks();
+  // const [decks, setDecks] = useState<Deck[]>([]);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid, touchedFields },
+  } = useForm<CreateDeckFormProps>({
+    mode: "onChange",
+    defaultValues: {
+      name: "",
+      description: "",
+    },
+  });
+  const { create } = useCreateDeck();
 
   return (
     <>
@@ -38,7 +43,7 @@ export default function Page() {
           <SearchBar onSearch={(query) => console.log(query)} />
 
           {/* Botão flutuante de adicionar baralho */}
-          <FloatingButton onClick={() => console.log("Adicionar baralho")}>
+          <FloatingButton onClick={() => setIsDialogOpen(true)}>
             <GoPlus className="text-2xl" />
             Adicionar baralho
           </FloatingButton>
@@ -100,6 +105,77 @@ export default function Page() {
               />
             ))}
           </section>
+
+          <Dialog onClose={() => setIsDialogOpen(false)} isOpen={isDialogOpen}>
+            <h2 className="text-2xl font-bold mb-4">Criar baralho</h2>
+            <form
+              onSubmit={handleSubmit((data) => {
+                create(data);
+                setIsDialogOpen(false);
+              })}
+            >
+              <div className="mb-4">
+                <label
+                  htmlFor="name"
+                  className="block text-gray-700 font-bold mb-2"
+                >
+                  Nome do baralho
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  {...register("name", {
+                    required: "Nome é obrigatório",
+                    minLength: {
+                      value: 3,
+                      message: "Nome deve ter pelo menos 3 caracteres",
+                    },
+                    maxLength: {
+                      value: 50,
+                      message: "Nome deve ter no máximo 50 caracteres",
+                    },
+                  })}
+                  className={clsx(
+                    "border rounded-lg p-2 w-full",
+                    {
+                      "border-red-500": errors.name && touchedFields.name,
+                      "border-gray-300": !errors.name,
+                    },
+                    "focus:outline-none focus:ring-2 focus:ring-primary"
+                  )}
+                />
+                {errors.name && touchedFields.name && (
+                  <div className="flex items-center text-red-500 text-sm mt-1">
+                    <GoXCircle className="mr-1" />
+                    {errors.name.message}
+                  </div>
+                )}
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="description"
+                  className="block text-gray-700 font-bold mb-2"
+                >
+                  Descrição
+                </label>
+                <textarea
+                  id="description"
+                  {...register("description")}
+                  className="border border-gray-300 rounded-lg p-2 w-full h-24 resize-none focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={!isValid}
+                className={clsx("bg-primary text-white rounded-lg px-4 py-2", {
+                  "opacity-50 cursor-not-allowed": !isValid,
+                  "hover:bg-primary-hover": isValid,
+                })}
+              >
+                Criar baralho
+              </button>
+            </form>
+          </Dialog>
         </main>
       </div>
     </>
