@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { BsExclamationCircle } from "react-icons/bs";
 import { GoPlus, GoXCircle } from "react-icons/go";
@@ -18,7 +18,6 @@ interface CreateDeckFormProps {
 
 export default function Page() {
   const { decks } = useFetchDecks();
-  // const [decks, setDecks] = useState<Deck[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const {
     register,
@@ -32,6 +31,22 @@ export default function Page() {
     },
   });
   const { create } = useCreateDeck();
+  const [filteredDecks, setFilteredDecks] = useState(decks);
+
+  const handleSearch = (query: string) => {
+    if (query.length === 0 || query.trim() === "") {
+      setFilteredDecks(decks);
+      return;
+    }
+    const filtered = decks.filter((deck) =>
+      deck.name.toLowerCase().includes(query.toLowerCase())
+    );
+    setFilteredDecks(filtered);
+  };
+
+  useEffect(() => {
+    setFilteredDecks(decks);
+  }, [decks]);
 
   return (
     <>
@@ -40,7 +55,7 @@ export default function Page() {
         <Navbar />
         <main className="flex flex-col items-center justify-center min-h-scree mt-5 w-full">
           {/* Barra de pesquisa */}
-          <SearchBar onSearch={(query) => console.log(query)} />
+          <SearchBar onSearch={handleSearch} />
 
           {/* Botão flutuante de adicionar baralho */}
           <FloatingButton onClick={() => setIsDialogOpen(true)}>
@@ -96,7 +111,7 @@ export default function Page() {
                 </h2>
               </div>
             )}
-            {decks.map((deck) => (
+            {filteredDecks.map((deck) => (
               <DeckComponent
                 key={deck.id}
                 deck={deck}
@@ -176,7 +191,6 @@ export default function Page() {
               </button>
             </form>
           </Dialog>
-          
         </main>
       </div>
     </>
