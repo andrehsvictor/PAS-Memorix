@@ -27,7 +27,7 @@ export default function Dialog({ onClose, isOpen, children }: DialogProps) {
         )}
       >
         {/* Conteúdo do diálogo */}
-        <div className="bg-white rounded-lg p-6 w-[60%] shadow-lg">
+        <div className="bg-white rounded-lg p-6 w-[40%] shadow-lg">
           <div className="flex justify-end">
             <button
               onClick={onClose}
