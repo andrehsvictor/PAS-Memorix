@@ -5,13 +5,13 @@ import { BsEye } from "react-icons/bs";
 interface DeckProps {
   deck: Deck;
   onDelete: (deckId: string) => void;
-  onEdit: (deck: Deck) => void;
+  onView: (deckId: string) => void;
 }
 
-export default function DeckComponent({ deck, onDelete, onEdit }: DeckProps) {
+export default function DeckComponent({ deck, onDelete, onView }: DeckProps) {
   return (
     <>
-      <div className="bg-white rounded-lg border border-gray-300 p-4 hover:shadow-sm transition duration-200">
+      <div className="bg-white rounded-lg border border-gray-300 p-4 hover:shadow-sm transition duration-200 h-32 flex flex-col justify-between">
         <h2 className="text-lg font-semibold mb-2">{deck.name}</h2>
         <p className="text-gray-600">{deck.description}</p>
         <div className="flex justify-between mt-4">
@@ -21,7 +21,7 @@ export default function DeckComponent({ deck, onDelete, onEdit }: DeckProps) {
             className="text-primary hover:text-primary-hover transition duration-200"
             onClick={(e) => {
               e.preventDefault();
-              onEdit(deck);
+              onView(deck.id);
             }}
           >
             <BsEye className="inline-block mr-2" />

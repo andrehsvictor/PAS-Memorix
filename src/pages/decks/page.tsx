@@ -10,6 +10,7 @@ import DeckComponent from "./components/deck";
 import Dialog from "./components/dialog";
 import Navbar from "./components/navbar";
 import SearchBar from "./components/searchbar";
+import useDeleteDeck from "../../hooks/useDeleteDeck";
 
 interface CreateDeckFormProps {
   name: string;
@@ -31,6 +32,7 @@ export default function Page() {
     },
   });
   const { create } = useCreateDeck();
+  const { deleteDeck } = useDeleteDeck();
   const [filteredDecks, setFilteredDecks] = useState(decks);
 
   const handleSearch = (query: string) => {
@@ -115,8 +117,13 @@ export default function Page() {
               <DeckComponent
                 key={deck.id}
                 deck={deck}
-                onDelete={(deckId) => console.log("Deletar baralho", deckId)}
-                onEdit={(deck) => console.log("Editar baralho", deck)}
+                onDelete={(deckId) => {
+                  deleteDeck(deckId);
+                  window.location.reload();
+                }}
+                onView={(deckId) => {
+                  window.location.href = `/decks/${deckId}`;
+                }}
               />
             ))}
           </section>
@@ -127,6 +134,7 @@ export default function Page() {
               onSubmit={handleSubmit((data) => {
                 create(data);
                 setIsDialogOpen(false);
+                window.location.reload();
               })}
             >
               <div className="mb-4">

@@ -1,10 +1,12 @@
 import { GoCopy, GoVersions } from "react-icons/go";
 import { RxAvatar } from "react-icons/rx";
+import Logo from "../../../assets/logo.png";
 
 export default function Navbar() {
   return (
     <div className="flex items-center justify-between bg-primary p-3 w-full z-10">
       <div className="flex items-center flex-shrink-0 text-white mr-6">
+        <img src={Logo} alt="Logo" className="h-9 w-9 rounded-full" />
         <span className="font-semibold text-3xl tracking-tight">Memorix</span>
       </div>
       <div className="flex items-center gap-10">
