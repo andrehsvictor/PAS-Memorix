@@ -4,6 +4,7 @@ import DecksPage from "./pages/decks/page";
 import LoginPage from "./pages/login/page";
 import NotFoundPage from "./pages/not-found/page";
 import SignupPage from "./pages/signup/page";
+import DeckPage from "./pages/deck/page";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="*" element={<NotFoundPage />} />
         <Route index element={<DecksPage />} />
         <Route path="decks" element={<DecksPage />} />
+        <Route path="decks/:id" element={<DeckPage />} />
       </Route>
     </Routes>
   );

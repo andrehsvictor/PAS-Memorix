@@ -10,7 +10,7 @@ export default function Navbar() {
         <span className="font-semibold text-3xl tracking-tight">Memorix</span>
       </div>
       <div className="flex items-center gap-10">
-        <div className="flex lg:flex lg:items-center lg:w-auto lg:justify-end">
+        {/* <div className="flex lg:flex lg:items-center lg:w-auto lg:justify-end">
           <div className="text-sm lg:flex-grow lg:flex lg:justify-end gap-4">
             <a
               href="/decks"
@@ -27,7 +27,7 @@ export default function Navbar() {
               Cartões
             </a>
           </div>
-        </div>
+        </div> */}
         <a
           href="#"
           className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-gray-200 font-semibold"
