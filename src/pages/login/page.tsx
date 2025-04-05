@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { GoXCircle } from "react-icons/go";
 import { useAuth } from "../../contexts/auth-context";
 import clsx from "clsx";
+import Logo from "../../assets/logo-blue.png";
 
 interface LoginFormInputs {
   email: string;
@@ -39,9 +40,12 @@ export default function Page() {
           onSubmit={handleSubmit(onSubmit)}
         >
           {/* Título */}
-          <h1 className="text-4xl font-bold mb-4 text-center text-primary">
-            Memorix
-          </h1>
+          <div className="flex items-center justify-center mb-4">
+            <img src={Logo} alt="Logo" className="w-12 h-12" />
+            <h1 className="text-4xl font-bold text-center text-primary">
+              Memorix
+            </h1>
+          </div>
           {/* Campos do Formulário */}
           {/* E-mail */}
           <div className="mb-4">
