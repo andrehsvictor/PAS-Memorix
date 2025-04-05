@@ -1,10 +1,7 @@
 import { useState } from 'react';
-import { useAuth } from '../contexts/auth-context';
 import Deck from '../types/deck';
 
 export default function useFetchDeckById() {
-    const { user } = useAuth();
-    const [deck, setDeck] = useState<Deck | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -25,7 +22,6 @@ export default function useFetchDeckById() {
                 setLoading(false);
                 return;
             }
-            setDeck(foundDeck);
             setLoading(false);
             return foundDeck;
         } catch (err: any) {
