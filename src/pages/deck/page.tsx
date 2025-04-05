@@ -17,6 +17,8 @@ import Deck from "../../types/deck";
 import CardsTable from "./components/cards-table";
 import CreateCardDialog from "./components/create-card-dialog";
 import EditCardDialog from "./components/edit-card-dialog";
+import EditDeckDialog from "./components/edit-deck-dialog";
+import useEditDeck from "../../hooks/useEditDeck";
 
 export default function Page() {
   const { id } = useParams<{ id: string }>();
@@ -32,6 +34,7 @@ export default function Page() {
   const [isEditDeckDialogOpen, setIsEditDeckDialogOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
   const { deleteDeck } = useDeleteDeck();
+  const { editDeck } = useEditDeck();
 
   useEffect(() => {
     if (!id || id === "" || id === "undefined") {
@@ -139,6 +142,18 @@ export default function Page() {
           editCard(selectedCard?.id || "", {
             question: data.question,
             answer: data.answer,
+          });
+          window.location.reload();
+        }}
+      />
+      <EditDeckDialog
+        isOpen={isEditDeckDialogOpen}
+        onClose={() => setIsEditDeckDialogOpen(false)}
+        deck={deck}
+        onSubmit={(data) => {
+          editDeck(deck?.id || "", {
+            name: data.name,
+            description: data.description,
           });
           window.location.reload();
         }}

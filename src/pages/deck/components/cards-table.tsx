@@ -8,10 +8,10 @@ interface CardsTableProps {
   onDeleteCard: (cardId: string) => void;
 }
 
-export default function CardsTable({ 
-  cards, 
-  onEditCard, 
-  onDeleteCard 
+export default function CardsTable({
+  cards,
+  onEditCard,
+  onDeleteCard,
 }: CardsTableProps) {
   return (
     <table className="min-w-full divide-y divide-gray-200 mt-4">
@@ -21,7 +21,13 @@ export default function CardsTable({
             scope="col"
             className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
           >
-            Cartões
+            Questão
+          </th>
+          <th
+            scope="col"
+            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+          >
+            Resposta
           </th>
           <th
             scope="col"
@@ -42,7 +48,10 @@ export default function CardsTable({
           cards.map((card) => (
             <tr key={card.id}>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                {card.question} - {card.answer}
+                {card.question}
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                {card.answer}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                 <button
