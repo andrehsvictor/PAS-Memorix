@@ -13,14 +13,14 @@ export default function Navbar() {
         <div className="flex lg:flex lg:items-center lg:w-auto lg:justify-end">
           <div className="text-sm lg:flex-grow lg:flex lg:justify-end gap-4">
             <a
-              href="#"
+              href="/decks"
               className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-gray-200 font-semibold"
             >
               <GoVersions className="inline-block mr-1" strokeWidth={1.5} />
               Baralhos
             </a>
             <a
-              href="#"
+              href="/cards"
               className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-gray-200 font-semibold"
             >
               <GoCopy className="inline-block mr-1" strokeWidth={1.5} />
