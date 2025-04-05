@@ -8,7 +8,7 @@ import useCreateDeck from "../../hooks/useCreateDeck";
 import useFetchDecks from "../../hooks/useFetchDecks";
 import DeckComponent from "./components/deck";
 import Dialog from "./components/dialog";
-import Navbar from "./components/navbar";
+import Navbar from "../../components/navbar";
 import SearchBar from "./components/searchbar";
 import useDeleteDeck from "../../hooks/useDeleteDeck";
 

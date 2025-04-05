@@ -1,6 +1,6 @@
 import { GoCopy, GoVersions } from "react-icons/go";
 import { RxAvatar } from "react-icons/rx";
-import Logo from "../../../assets/logo.png";
+import Logo from "../assets/logo.png";
 
 export default function Navbar() {
   return (
