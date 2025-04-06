@@ -3,7 +3,7 @@ import { BiTrash } from "react-icons/bi";
 import { BsArrowLeft } from "react-icons/bs";
 import { GoPlus } from "react-icons/go";
 import { PiPencil } from "react-icons/pi";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import FloatingButton from "../../components/floating-button";
 import Navbar from "../../components/navbar";
 import useCreateCard from "../../hooks/useCreateCard";
@@ -35,6 +35,7 @@ export default function Page() {
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
   const { deleteDeck } = useDeleteDeck();
   const { editDeck } = useEditDeck();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!id || id === "" || id === "undefined") {
@@ -69,7 +70,7 @@ export default function Page() {
           className="absolute top-20 left-4 bg-primary rounded-full p-2 text-white cursor-pointer hover:bg-primary-hover transition duration-300 shadow-md"
           aria-label="Voltar"
         >
-          <a href="/decks">
+          <a href="/">
             <BsArrowLeft className="text-2xl" />
           </a>
         </button>
@@ -95,7 +96,7 @@ export default function Page() {
                   <button
                     onClick={() => {
                       deleteDeck(deck.id);
-                      window.location.href = "/decks";
+                      window.location.href = "/";
                     }}
                     className="bg-red-600 text-white rounded-full px-4 py-2 hover:bg-red-700 transition duration-200 ml-4 cursor-pointer"
                   >
@@ -115,7 +116,7 @@ export default function Page() {
                 }}
                 onDeleteCard={(cardId) => {
                   deleteCard(cardId);
-                  window.location.reload();
+                  navigate(0);
                 }}
               />
             </div>
@@ -131,7 +132,7 @@ export default function Page() {
             question: data.question,
             answer: data.answer,
           });
-          window.location.reload();
+          navigate(0);
         }}
       />
       <EditCardDialog
@@ -143,7 +144,7 @@ export default function Page() {
             question: data.question,
             answer: data.answer,
           });
-          window.location.reload();
+          navigate(0);
         }}
       />
       <EditDeckDialog
@@ -155,7 +156,7 @@ export default function Page() {
             name: data.name,
             description: data.description,
           });
-          window.location.reload();
+          navigate(0);
         }}
       />
     </>

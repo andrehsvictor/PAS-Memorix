@@ -11,6 +11,9 @@ import Dialog from "./components/dialog";
 import Navbar from "../../components/navbar";
 import SearchBar from "./components/searchbar";
 import useDeleteDeck from "../../hooks/useDeleteDeck";
+import ReviewNotification from "./components/review-notification";
+import { useReviewContext } from "../../contexts/review-context";
+import { useNavigate } from "react-router-dom";
 
 interface CreateDeckFormProps {
   name: string;
@@ -34,6 +37,8 @@ export default function Page() {
   const { create } = useCreateDeck();
   const { deleteDeck } = useDeleteDeck();
   const [filteredDecks, setFilteredDecks] = useState(decks);
+  const { cards } = useReviewContext();
+  const navigate = useNavigate();
 
   const handleSearch = (query: string) => {
     if (query.length === 0 || query.trim() === "") {
@@ -66,29 +71,7 @@ export default function Page() {
           </FloatingButton>
 
           {/* Notificação da quantidade de cartões para revisar */}
-          <div
-            className={clsx(
-              "flex items-center justify-between",
-              "bg-white rounded-lg p-4",
-              "border border-primary",
-              "w-[80%]"
-            )}
-          >
-            <div className="flex items-center">
-              <BsExclamationCircle className="text-2xl text-primary mr-2" />
-              <span className="text-gray-700">
-                Você tem 5 cartões para revisar
-              </span>
-            </div>
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={() => console.log("Revisar cartões")}
-                className="bg-primary text-white rounded-lg px-4 py-2 hover:bg-primary-hover transition duration-200"
-              >
-                Revisar cartões
-              </button>
-            </div>
-          </div>
+          <ReviewNotification cardCount={cards.length} />
 
           {/* Seção dos baralhos */}
           <section
@@ -119,10 +102,10 @@ export default function Page() {
                 deck={deck}
                 onDelete={(deckId) => {
                   deleteDeck(deckId);
-                  window.location.reload();
+                  navigate(0);
                 }}
                 onView={(deckId) => {
-                  window.location.href = `/decks/${deckId}`;
+                  navigate(`/decks/${deckId}`);
                 }}
               />
             ))}
@@ -134,7 +117,7 @@ export default function Page() {
               onSubmit={handleSubmit((data) => {
                 create(data);
                 setIsDialogOpen(false);
-                window.location.reload();
+                navigate(0);
               })}
             >
               <div className="mb-4">
@@ -192,7 +175,7 @@ export default function Page() {
                 disabled={!isValid}
                 className={clsx("bg-primary text-white rounded-lg px-4 py-2", {
                   "opacity-50 cursor-not-allowed": !isValid,
-                  "hover:bg-primary-hover": isValid,
+                  "hover:bg-primary-hover cursor-pointer": isValid,
                 })}
               >
                 Criar baralho

@@ -5,6 +5,7 @@ import LoginPage from "./pages/login/page";
 import NotFoundPage from "./pages/not-found/page";
 import SignupPage from "./pages/signup/page";
 import DeckPage from "./pages/deck/page";
+import ReviewPage from "./pages/review/page";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route index element={<DecksPage />} />
         <Route path="decks" element={<DecksPage />} />
         <Route path="decks/:id" element={<DeckPage />} />
+        <Route path="review" element={<ReviewPage />} />
       </Route>
     </Routes>
   );
