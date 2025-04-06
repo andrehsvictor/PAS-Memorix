@@ -66,7 +66,7 @@ export default function Page() {
         <Navbar />
         {/* Botão icone de voltar. */}
         <button
-          className="absolute top-16 left-4 bg-primary rounded-full p-2 text-white cursor-pointer hover:bg-primary-hover transition duration-300"
+          className="absolute top-20 left-4 bg-primary rounded-full p-2 text-white cursor-pointer hover:bg-primary-hover transition duration-300 shadow-md"
           aria-label="Voltar"
         >
           <a href="/decks">
