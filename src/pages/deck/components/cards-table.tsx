@@ -56,14 +56,14 @@ export default function CardsTable({
               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                 <button
                   onClick={() => onEditCard(card)}
-                  className="text-primary hover:text-primary-hover"
+                  className="text-primary hover:text-primary-hover cursor-pointer"
                 >
                   <PiPencil className="inline-block mr-1" />
                   Editar
                 </button>
                 <button
                   onClick={() => onDeleteCard(card.id)}
-                  className="text-red-600 hover:text-red-900 ml-4"
+                  className="text-red-600 hover:text-red-900 ml-4 cursor-pointer"
                 >
                   <BiTrash className="inline-block mr-1" />
                   Excluir
