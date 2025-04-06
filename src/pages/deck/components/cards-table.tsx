@@ -40,7 +40,7 @@ export default function CardsTable({
       <tbody className="bg-white divide-y divide-gray-200">
         {cards.length === 0 ? (
           <tr>
-            <td colSpan={2} className="px-6 py-4 text-center text-gray-500">
+            <td colSpan={3} className="px-6 py-4 text-center text-gray-500">
               Nenhum cartão encontrado
             </td>
           </tr>
