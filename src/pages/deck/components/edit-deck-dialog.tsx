@@ -91,11 +91,6 @@ export default function EditDeckDialog({
           <textarea
             id="description"
             {...registerEdit("description", {
-              required: "Descrição é obrigatória",
-              minLength: {
-                value: 3,
-                message: "Descrição deve ter pelo menos 3 caracteres",
-              },
               maxLength: {
                 value: 200,
                 message: "Descrição deve ter no máximo 200 caracteres",
