@@ -13,7 +13,9 @@ export default function DeckComponent({ deck, onDelete, onView }: DeckProps) {
     <>
       <div className="bg-white rounded-lg border border-gray-300 p-4 hover:shadow-sm transition duration-200 h-32 flex flex-col justify-between">
         <h2 className="text-lg font-semibold mb-2">{deck.name}</h2>
-        <p className="text-gray-600">{deck.description}</p>
+        <p className="text-gray-600 whitespace-nowrap overflow-clip overflow-ellipsis">
+          {deck.description}
+        </p>
         <div className="flex justify-between mt-4">
           {/* Link para ver o baralho */}
           <a
