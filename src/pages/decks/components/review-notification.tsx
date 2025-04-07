@@ -12,7 +12,7 @@ export default function ReviewNotification({
   const navigate = useNavigate();
 
   const handleReviewClick = () => {
-    navigate("/review");
+    window.location.href = "/review";
   };
 
   if (cardCount <= 0) {
