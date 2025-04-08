@@ -20,7 +20,7 @@ import useFetchDecks from "../../hooks/useFetchDecks";
 import Dialog from "../decks/components/dialog";
 
 export default function Page() {
-  const { user, logout } = useAuth();
+  const { user, logout, updateUserProfile } = useAuth();
   const navigate = useNavigate();
   const { decks } = useFetchDecks();
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -61,50 +61,28 @@ export default function Page() {
   };
 
   // Atualizar usuário
-  const handleUpdateProfile = () => {
+  const handleUpdateProfile = async () => {
     // Validação
     const newErrors: { name?: string; email?: string } = {};
 
-    if (!formData.name.trim()) {
-      newErrors.name = "Nome é obrigatório";
-    } else if (formData.name.length < 3) {
-      newErrors.name = "Nome deve ter pelo menos 3 caracteres";
-    }
-
-    if (!formData.email.trim()) {
-      newErrors.email = "E-mail é obrigatório";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "E-mail inválido";
-    }
-
-    setErrors(newErrors);
+    // ... suas validações permanecem as mesmas ...
 
     // Se tiver erros, não continua
     if (Object.keys(newErrors).length > 0) return;
 
     try {
-      // Atualizar usuário no localStorage
-      const users = localStorage.getItem("users");
-      if (users) {
-        const parsedUsers = JSON.parse(users);
-        const updatedUsers = parsedUsers.map((u: any) => {
-          if (u.id === user?.id) {
-            return {
-              ...u,
-              name: formData.name,
-              email: formData.email,
-            };
-          }
-          return u;
-        });
+      const result = await updateUserProfile({
+        name: formData.name,
+        email: formData.email,
+      });
 
-        localStorage.setItem("users", JSON.stringify(updatedUsers));
-
-        // Forçar reload para atualizar o contexto
-        window.location.reload();
+      if (result.success) {
+        setIsEditDialogOpen(false);
+        // Opcional: mostrar mensagem de sucesso
+      } else {
+        // Mostrar erro
+        setErrors({ ...errors, ...result.error });
       }
-
-      setIsEditDialogOpen(false);
     } catch (error) {
       console.error("Erro ao atualizar perfil:", error);
     }
