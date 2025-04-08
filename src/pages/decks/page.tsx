@@ -15,6 +15,7 @@ import DeckForm from "./components/deck-form";
 import Dialog from "./components/dialog";
 import ReviewNotification from "./components/review-notification";
 import SearchBar from "./components/searchbar";
+import { useAuth } from "../../contexts/auth-context";
 
 interface CreateDeckFormProps {
   name: string;
@@ -41,6 +42,7 @@ export default function Page() {
   const { deleteDeck } = useDeleteDeck();
   const { cards } = useReviewContext();
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   const getSortedDecks = () => {
     return sortedDecks[sortOption];
@@ -73,6 +75,11 @@ export default function Page() {
     }
   };
 
+  if (!isAuthenticated) {
+    navigate("/login");
+    return null;
+  }
+  
   return (
     <>
       <div className="bg-gradient-to-br from-slate-100 to-slate-200 min-h-screen pb-10">

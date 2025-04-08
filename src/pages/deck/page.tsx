@@ -27,6 +27,7 @@ import EditCardDialog from "./components/edit-card-dialog";
 import EditDeckDialog from "./components/edit-deck-dialog";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { useAuth } from "../../contexts/auth-context";
 
 export default function Page() {
   const { id } = useParams<{ id: string }>();
@@ -40,6 +41,7 @@ export default function Page() {
   const { createCard } = useCreateCard();
   const { deleteDeck } = useDeleteDeck();
   const { editDeck } = useEditDeck();
+  const { isAuthenticated } = useAuth();
 
   const [isCreateCardDialogOpen, setIsCreateCardDialogOpen] = useState(false);
   const [isEditCardDialogOpen, setIsEditCardDialogOpen] = useState(false);
@@ -224,6 +226,11 @@ export default function Page() {
         </div>
       </div>
     );
+  }
+
+  if (!isAuthenticated) {
+    navigate("/login");
+    return null;
   }
 
   return (
