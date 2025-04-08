@@ -78,9 +78,7 @@ export default function Page() {
 
       if (result.success) {
         setIsEditDialogOpen(false);
-        // Opcional: mostrar mensagem de sucesso
       } else {
-        // Mostrar erro
         setErrors({ ...errors, ...result.error });
       }
     } catch (error) {
@@ -88,7 +86,6 @@ export default function Page() {
     }
   };
 
-  // Se estiver carregando ou não tiver usuário
   if (!user) {
     return (
       <div className="bg-gradient-to-br from-slate-100 to-slate-200 min-h-screen">

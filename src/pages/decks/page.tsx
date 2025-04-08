@@ -89,7 +89,9 @@ export default function Page() {
           onNewDeck={() => setIsDialogOpen(true)}
         />
 
-        <ReviewNotification cardCount={cards.length} className="mb-5" />
+        {cards.length > 0 && (
+          <ReviewNotification cardCount={cards.length} className="mb-5" />
+        )}
 
         <DecksList
           decks={filteredDecks}

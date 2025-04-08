@@ -22,13 +22,7 @@ export default function UtilitiesBar({
   return (
     <>
       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
-        <div className="w-full md:w-1/2 lg:w-1/3">
-          <SearchBar
-            onSearch={onSearch}
-            placeholder="Pesquisar baralhos..."
-            className="w-full"
-          />
-        </div>
+        <SearchBar onSearch={onSearch} placeholder="Pesquisar baralhos..." />
 
         <div className="flex items-center gap-2">
           {error && (

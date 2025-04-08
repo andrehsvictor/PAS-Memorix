@@ -263,10 +263,10 @@ export default function WelcomeSection() {
                     <BsGem className="text-green-300 text-lg" />
                   </div>
                   <div>
-                    <div className="text-sm text-blue-100 font-medium">
+                    <div className="text-sm text-green-400 font-medium">
                       Revisões concluídas
                     </div>
-                    <div className="text-lg font-bold text-white">
+                    <div className="text-lg font-bold text-green-500">
                       Tudo em dia!
                     </div>
                   </div>

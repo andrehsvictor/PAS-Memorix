@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   BsArrowLeft,
   BsCheckCircle,
@@ -28,10 +28,16 @@ export default function ReviewPage() {
     fetchCardsToReview,
   } = useReviewContext();
 
+  // Flag para evitar múltiplas chamadas do fetchCardsToReview
+  const [hasInitialized, setHasInitialized] = useState(false);
+
   useEffect(() => {
-    // Garantir que temos os cartões mais recentes ao carregar a página
-    fetchCardsToReview(true);
-  }, [fetchCardsToReview]);
+    // Garantir que buscamos os cartões apenas uma vez na montagem do componente
+    if (!hasInitialized) {
+      fetchCardsToReview(true);
+      setHasInitialized(true);
+    }
+  }, [hasInitialized, fetchCardsToReview]);
 
   if (isLoading) {
     return (

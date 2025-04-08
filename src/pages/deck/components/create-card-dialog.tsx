@@ -64,7 +64,7 @@ export default function CreateCardDialog({
     <Dialog onClose={onClose} isOpen={isOpen}>
       <div className="flex items-center gap-3 mb-6">
         <div className="bg-primary bg-opacity-10 p-2 rounded-full">
-          <GoPlus className="text-2xl text-primary" />
+          <GoPlus className="text-2xl text-white" />
         </div>
         <h2 className="text-xl font-semibold text-gray-800">
           Criar novo cartão

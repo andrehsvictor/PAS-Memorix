@@ -5,6 +5,7 @@ import {
   useEffect,
   useCallback,
   useMemo,
+  ReactNode,
 } from "react";
 import Card from "../types/card";
 import useEditCard from "../hooks/useEditCard";
@@ -35,7 +36,7 @@ interface ReviewContextProps {
   isLoading: boolean; // Status de carregamento
   showAnswer: boolean; // Se a resposta está visível
   progress: number; // Progresso da revisão (0-100)
-  fetchCardsToReview: (forceRefresh?: boolean) => Promise<void>; // Buscar cartões
+  fetchCardsToReview: (forceRefresh?: boolean) => void; // Modificado para não retornar Promise
   toggleShowAnswer: () => void; // Mostrar/esconder resposta
   answerCard: (quality: ResponseQuality) => Promise<void>; // Responder cartão
   resetReview: () => void; // Reiniciar revisão
@@ -54,8 +55,12 @@ export function useReviewContext() {
   return context;
 }
 
+interface ReviewProviderProps {
+  children: ReactNode;
+}
+
 // Prover o contexto
-export function ReviewProvider({ children }: { children: React.ReactNode }) {
+export function ReviewProvider({ children }: ReviewProviderProps) {
   // Estado do contexto
   const [cards, setCards] = useState<Card[]>([]);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
@@ -88,7 +93,7 @@ export function ReviewProvider({ children }: { children: React.ReactNode }) {
   );
 
   // Buscar todos os cartões - necessário para cálculos de estatísticas
-  const fetchAllCards = useCallback(async () => {
+  const fetchAllCards = useCallback(() => {
     try {
       if (!user?.id) {
         setAllCards([]);
@@ -113,9 +118,9 @@ export function ReviewProvider({ children }: { children: React.ReactNode }) {
     }
   }, [user?.id]);
 
-  // Buscar cartões para revisão
+  // Buscar cartões para revisão - MODIFICADO para não ser async
   const fetchCardsToReview = useCallback(
-    async (forceRefresh = false) => {
+    (forceRefresh = false) => {
       // Se já carregamos recentemente e não forçamos atualização, retorna
       const now = new Date();
       if (
@@ -130,6 +135,7 @@ export function ReviewProvider({ children }: { children: React.ReactNode }) {
       try {
         if (!user?.id) {
           setCards([]);
+          setIsLoading(false);
           return;
         }
 
@@ -143,7 +149,7 @@ export function ReviewProvider({ children }: { children: React.ReactNode }) {
         const userDeckIds = userDecks.map((deck: any) => deck.id);
 
         // Filtrar cartões para revisão
-        const cardsToReview = allCardsData.filter((card: Card) => {
+        const cardsToReview = allCardsData.filter((card: any) => {
           // Verificar se pertence a um baralho do usuário
           const belongsToUser = userDeckIds.includes(card.deckId);
           if (!belongsToUser) return false;
@@ -156,7 +162,7 @@ export function ReviewProvider({ children }: { children: React.ReactNode }) {
           return reviewDate <= now;
         });
 
-        // Embaralhar os cartões para uma ordem aleatória usando algoritmo Fisher-Yates
+        // Embaralhar os cartões para uma ordem aleatória
         const shuffledCards = [...cardsToReview];
         for (let i = shuffledCards.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
@@ -170,7 +176,7 @@ export function ReviewProvider({ children }: { children: React.ReactNode }) {
         setLastFetch(now);
 
         // Atualizar cache de todos os cartões
-        await fetchAllCards();
+        fetchAllCards();
       } catch (error) {
         console.error("Erro ao buscar cartões para revisão:", error);
         setCards([]);
@@ -181,10 +187,21 @@ export function ReviewProvider({ children }: { children: React.ReactNode }) {
     [user?.id, lastFetch, fetchAllCards]
   );
 
-  // Buscar cartões ao inicializar ou quando o usuário mudar
+  // Inicialização única ao montar o componente
   useEffect(() => {
-    fetchCardsToReview();
-  }, [fetchCardsToReview]);
+    if (user) {
+      // Carrega os cartões apenas uma vez ao montar
+      fetchCardsToReview(false);
+    }
+    // IMPORTANTE: Sem a dependência fetchCardsToReview para evitar loops
+  }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Quando o usuário mudar, atualizamos os cartões
+  useEffect(() => {
+    if (user) {
+      fetchAllCards();
+    }
+  }, [user, fetchAllCards]);
 
   // Calcular próxima revisão baseada no algoritmo SM-2
   const calculateNextReview = useCallback(
@@ -226,16 +243,55 @@ export function ReviewProvider({ children }: { children: React.ReactNode }) {
       nextReviewAt.setDate(now.getDate() + interval);
       nextReviewAt.setHours(0, 0, 0, 0); // Definir para meia-noite
 
-      return {
+      // Registrar estudo
+      recordStudySession();
+
+      // Criamos um objeto para armazenar em localStorage
+      const updatedCard = {
         ...card,
+        nextReviewAt: nextReviewAt, // Formatar data para string
         easinessFactor,
         interval,
         repetitions,
-        updatedAt: new Date(),
+        updatedAt: new Date(), // Formatar data para string
       };
+
+      return updatedCard;
     },
     []
   );
+
+  // Registrar sessão de estudo
+  const recordStudySession = useCallback(() => {
+    if (!user?.id) return;
+
+    const now = new Date();
+    const todayString = now.toISOString().split("T")[0];
+    const statsKey = `study_stats_${user.id}`;
+
+    try {
+      // Carregar estatísticas existentes
+      const existingStatsJson = localStorage.getItem(statsKey);
+      const stats = existingStatsJson
+        ? JSON.parse(existingStatsJson)
+        : {
+            studyDays: [],
+            lastStudyDate: null,
+          };
+
+      // Verificar se já estudou hoje
+      if (!stats.studyDays.includes(todayString)) {
+        stats.studyDays.push(todayString);
+      }
+
+      stats.lastStudyDate = now.toISOString();
+
+      // Salvar estatísticas
+      localStorage.setItem(statsKey, JSON.stringify(stats));
+    } catch (err) {
+      console.error("Erro ao registrar sessão de estudo:", err);
+    }
+  }, [user?.id]);
 
   // Mostrar/esconder resposta
   const toggleShowAnswer = useCallback(() => {
