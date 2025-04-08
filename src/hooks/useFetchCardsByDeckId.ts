@@ -1,15 +1,9 @@
+import { useCallback } from 'react';
 import Card from '../types/card';
-import useFetchDeckById from './useFetchDeckById';
 
 export default function useFetchCardsByDeckId() {
-    const { fetchDeckById } = useFetchDeckById();
-
-    const fetchCardsByDeckId = (deckId: string) => {
+    const fetchCardsByDeckId = useCallback((deckId: string) => {
         try {
-            const deck = fetchDeckById(deckId);
-            if (!deck) {
-                return [];
-            }
             const cards = localStorage.getItem("cards");
             const parsedCards = cards ? JSON.parse(cards) : [];
             const deckCards = parsedCards.filter((card: Card) => card.deckId === deckId);
@@ -18,7 +12,7 @@ export default function useFetchCardsByDeckId() {
             console.error("Error fetching cards by deck ID:", error);
             return [];
         }
-    }
+    }, []);
 
-    return { fetchCardsByDeckId }
+    return { fetchCardsByDeckId };
 }

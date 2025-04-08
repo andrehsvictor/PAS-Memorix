@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { BiTrash } from "react-icons/bi";
@@ -32,7 +32,7 @@ export default function Page() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { loading, error, fetchDeckById } = useFetchDeckById();
-  const [deck, setDeck] = useState<Deck | null>(null);
+  const [deck, setDeck] = useState<Deck | null | undefined>(null);
   const [cards, setCards] = useState<Card[]>([]);
   const { fetchCardsByDeckId } = useFetchCardsByDeckId();
   const { editCard } = useEditCard();
@@ -48,28 +48,38 @@ export default function Page() {
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Carregar dados do baralho
-  useEffect(() => {
+  // CORREÇÃO: Memoize a função de busca do baralho
+  const fetchDeck = useCallback(() => {
     if (!id || id === "" || id === "undefined") {
       setDeck(null);
       return;
     }
     const fetchedDeck = fetchDeckById(id);
-    if (error) {
-      console.error(error);
-    }
     setDeck(fetchedDeck);
-  }, [id, fetchDeckById, error]);
+  }, [id, fetchDeckById]);
 
-  // Carregar cartões do baralho
+  // CORREÇÃO: Memoize a função de busca de cartões
+  const fetchCards = useCallback(() => {
+    if (!id) return;
+
+    // Buscar cards usando id em vez de deck.id
+    const fetchedCards = fetchCardsByDeckId(id);
+    setCards(fetchedCards);
+  }, [id, fetchCardsByDeckId]);
+
+  // Carregar dados do baralho
   useEffect(() => {
-    if (deck) {
-      const fetchedCards = fetchCardsByDeckId(deck.id);
-      setCards(fetchedCards);
-    }
-  }, [deck, fetchCardsByDeckId]);
+    fetchDeck();
+  }, [fetchDeck]);
 
-  // Filtrar cartões baseado na pesquisa
+  // Carregar dados do baralho - agora com dependência corrigida
+
+  // Carregar cartões do baralho - agora com dependência corrigida
+  useEffect(() => {
+    fetchCards();
+  }, [fetchCards]);
+
+  // Filtrar cartões baseado na pesquisa - sem mudanças
   const filteredCards = searchQuery
     ? cards.filter(
         (card) =>
@@ -78,14 +88,13 @@ export default function Page() {
       )
     : cards;
 
-  // Manipuladores de eventos
+  // Manipuladores de eventos - sem mudanças
   const handleCreateCard = (data: { question: string; answer: string }) => {
     const newCard = createCard(id || "", {
       question: data.question,
       answer: data.answer,
     });
 
-    // Atualização local do estado ao invés de recarregar a página
     if (newCard) {
       setCards((prevCards) => [...prevCards, newCard]);
       setIsCreateCardDialogOpen(false);
@@ -129,7 +138,6 @@ export default function Page() {
       description: data.description,
     });
 
-    // Atualização local do estado
     setDeck((prevDeck) =>
       prevDeck
         ? {
@@ -149,6 +157,12 @@ export default function Page() {
 
     deleteDeck(deck.id);
     navigate("/decks", { replace: true });
+  };
+
+  // CORREÇÃO: Função de navegação para evitar redirecionamento duplicado
+  const handleBackClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    navigate("/decks");
   };
 
   // Renderização condicional para estados de carregamento e erro
@@ -261,12 +275,12 @@ export default function Page() {
         <Navbar />
 
         <main className="container mx-auto px-4 py-8">
-          {/* Botão de voltar */}
+          {/* CORREÇÃO: Botão de voltar - removido onClick que causava loop */}
           <Link
             to="/decks"
             className="inline-flex items-center mb-6 bg-white rounded-full p-2 shadow-sm text-gray-600 hover:text-primary hover:shadow-md transition duration-300"
             aria-label="Voltar para baralhos"
-            onClick={() => window.location.href = "/decks"}
+            onClick={handleBackClick}
           >
             <BsArrowLeft className="text-xl" />
           </Link>
@@ -277,7 +291,7 @@ export default function Page() {
             transition={{ duration: 0.3 }}
             className="bg-white shadow-md rounded-xl p-6 mb-6"
           >
-            {/* Cabeçalho do baralho */}
+            {/* Resto do componente permanece igual */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
               <div className="mb-4 sm:mb-0">
                 <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
@@ -309,14 +323,12 @@ export default function Page() {
               </div>
             </div>
 
-            {/* Descrição do baralho */}
             {deck.description && (
               <p className="text-gray-700 mb-4 bg-gray-50 p-4 rounded-lg">
                 {deck.description}
               </p>
             )}
 
-            {/* Cards stats */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
               <div className="bg-blue-50 p-4 rounded-lg flex items-center">
                 <div className="bg-blue-100 p-2 rounded-full mr-3">
@@ -362,7 +374,6 @@ export default function Page() {
               </div>
             </div>
 
-            {/* Barra de pesquisa */}
             <div className="mb-6">
               <div className="relative">
                 <input
@@ -410,7 +421,6 @@ export default function Page() {
               </div>
             </div>
 
-            {/* Tabela de cartões */}
             {filteredCards.length === 0 ? (
               <div className="bg-gray-50 rounded-xl p-8 text-center">
                 {searchQuery ? (

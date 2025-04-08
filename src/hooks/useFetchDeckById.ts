@@ -1,34 +1,33 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import Deck from '../types/deck';
 
 export default function useFetchDeckById() {
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchDeckById = (deckId: string) => {
-        setLoading(true);
-        setError(null);
+    const fetchDeckById = useCallback((deckId: string): Deck | undefined => {
+        if (!deckId) return undefined;
+
         try {
             const decks = localStorage.getItem('decks');
             const parsedDecks = decks ? JSON.parse(decks) : [];
             const foundDeck = parsedDecks.find((deck: Deck) => deck.id === deckId);
+
             if (!foundDeck) {
-                setError('Baralho não encontrado');
-                setLoading(false);
-                return;
+                return undefined;
             }
-            if (foundDeck.userId !== localStorage.getItem('user_id')) {
-                setError('Baralho não encontrado');
-                setLoading(false);
-                return;
+
+            const userId = localStorage.getItem('user_id');
+            if (foundDeck.userId !== userId) {
+                return undefined;
             }
-            setLoading(false);
+
             return foundDeck;
         } catch (err: any) {
-            setError(err.message);
+            console.error("Erro ao buscar baralho:", err);
+            return undefined;
         }
-        setLoading(false);
-    }
+    }, []);
 
-    return { loading, error, fetchDeckById }
+    return { loading, error, fetchDeckById };
 }
