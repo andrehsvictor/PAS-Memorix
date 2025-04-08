@@ -1,9 +1,8 @@
-import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { BsArrowClockwise, BsExclamationCircle } from "react-icons/bs";
-import { GoPlus, GoXCircle } from "react-icons/go";
+import { GoPlus } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
 import EmptyState from "../../components/empty-state";
 import Navbar from "../../components/navbar";
@@ -12,6 +11,7 @@ import useCreateDeck from "../../hooks/useCreateDeck";
 import useDeleteDeck from "../../hooks/useDeleteDeck";
 import useFetchDecks from "../../hooks/useFetchDecks";
 import DeckComponent from "./components/deck";
+import DeckForm from "./components/deck-form";
 import Dialog from "./components/dialog";
 import ReviewNotification from "./components/review-notification";
 import SearchBar from "./components/searchbar";
@@ -29,12 +29,7 @@ export default function Page() {
   >("recent");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isValid, touchedFields },
-  } = useForm<CreateDeckFormProps>({
+  const { reset } = useForm<CreateDeckFormProps>({
     mode: "onChange",
     defaultValues: {
       name: "",
@@ -252,81 +247,13 @@ export default function Page() {
                 Criar novo baralho
               </h2>
             </div>
-            <form onSubmit={handleSubmit(handleCreateDeck)}>
-              <div className="mb-4">
-                <label
-                  htmlFor="name"
-                  className="block text-gray-700 font-medium mb-2"
-                >
-                  Nome do baralho
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  placeholder="Ex: Matemática Básica"
-                  {...register("name", {
-                    required: "Nome é obrigatório",
-                    minLength: {
-                      value: 3,
-                      message: "Nome deve ter pelo menos 3 caracteres",
-                    },
-                    maxLength: {
-                      value: 50,
-                      message: "Nome deve ter no máximo 50 caracteres",
-                    },
-                  })}
-                  className={clsx(
-                    "border rounded-lg p-2.5 w-full bg-gray-50",
-                    {
-                      "border-red-500 ring-1 ring-red-500":
-                        errors.name && touchedFields.name,
-                      "border-gray-300": !errors.name,
-                    },
-                    "focus:outline-none focus:ring-2 focus:ring-primary"
-                  )}
-                />
-                {errors.name && touchedFields.name && (
-                  <div className="flex items-center text-red-500 text-sm mt-1">
-                    <GoXCircle className="mr-1" />
-                    {errors.name.message}
-                  </div>
-                )}
-              </div>
-              <div className="mb-6">
-                <label
-                  htmlFor="description"
-                  className="block text-gray-700 font-medium mb-2"
-                >
-                  Descrição{" "}
-                  <span className="text-gray-400 text-xs">(opcional)</span>
-                </label>
-                <textarea
-                  id="description"
-                  placeholder="Descreva o conteúdo deste baralho..."
-                  {...register("description")}
-                  className="border border-gray-300 rounded-lg p-2.5 w-full h-28 resize-none bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary"
-                />
-              </div>
-              <div className="flex justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => setIsDialogOpen(false)}
-                  className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  disabled={!isValid}
-                  className={clsx("px-4 py-2 rounded-lg text-white", {
-                    "bg-primary hover:bg-primary-hover cursor-pointer": isValid,
-                    "bg-gray-400 cursor-not-allowed": !isValid,
-                  })}
-                >
-                  Criar baralho
-                </button>
-              </div>
-            </form>
+            <DeckForm
+              onSubmit={(data) => {
+                handleCreateDeck(data);
+                reset();
+              }}
+              onCancel={() => setIsDialogOpen(false)}
+            />
           </Dialog>
         </main>
       </div>
