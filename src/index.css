@@ -4,6 +4,11 @@
   font-family: "Inter", sans-serif;
 }
 
+button,
+select {
+  cursor: pointer;
+}
+
 @theme {
   --color-primary: #451bff;
   --color-primary-hover: #5f2eff;

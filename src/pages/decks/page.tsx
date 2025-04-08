@@ -1,19 +1,20 @@
 import clsx from "clsx";
-import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { BsExclamationCircle } from "react-icons/bs";
+import { BsArrowClockwise, BsExclamationCircle } from "react-icons/bs";
 import { GoPlus, GoXCircle } from "react-icons/go";
-import FloatingButton from "../../components/floating-button";
+import { useNavigate } from "react-router-dom";
+import EmptyState from "../../components/empty-state";
+import Navbar from "../../components/navbar";
+import { useReviewContext } from "../../contexts/review-context";
 import useCreateDeck from "../../hooks/useCreateDeck";
+import useDeleteDeck from "../../hooks/useDeleteDeck";
 import useFetchDecks from "../../hooks/useFetchDecks";
 import DeckComponent from "./components/deck";
 import Dialog from "./components/dialog";
-import Navbar from "../../components/navbar";
-import SearchBar from "./components/searchbar";
-import useDeleteDeck from "../../hooks/useDeleteDeck";
 import ReviewNotification from "./components/review-notification";
-import { useReviewContext } from "../../contexts/review-context";
-import { useNavigate } from "react-router-dom";
+import SearchBar from "./components/searchbar";
 
 interface CreateDeckFormProps {
   name: string;
@@ -21,11 +22,17 @@ interface CreateDeckFormProps {
 }
 
 export default function Page() {
-  const { decks } = useFetchDecks();
+  const { decks, isLoading, error, refetch, sortedDecks } = useFetchDecks();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [sortOption, setSortOption] = useState<
+    "recent" | "alphabetical" | "byCardCount"
+  >("recent");
+  const [searchQuery, setSearchQuery] = useState("");
+
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isValid, touchedFields },
   } = useForm<CreateDeckFormProps>({
     mode: "onChange",
@@ -34,102 +41,229 @@ export default function Page() {
       description: "",
     },
   });
+
   const { create } = useCreateDeck();
   const { deleteDeck } = useDeleteDeck();
-  const [filteredDecks, setFilteredDecks] = useState(decks);
   const { cards } = useReviewContext();
   const navigate = useNavigate();
 
-  const handleSearch = (query: string) => {
-    if (query.length === 0 || query.trim() === "") {
-      setFilteredDecks(decks);
-      return;
-    }
-    const filtered = decks.filter((deck) =>
-      deck.name.toLowerCase().includes(query.toLowerCase())
-    );
-    setFilteredDecks(filtered);
+  const getSortedDecks = () => {
+    return sortedDecks[sortOption];
   };
 
-  useEffect(() => {
-    setFilteredDecks(decks);
-  }, [decks]);
+  const filteredDecks = getSortedDecks().filter(
+    (deck) =>
+      !searchQuery ||
+      deck.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+  };
+
+  const handleCreateDeck = (data: CreateDeckFormProps) => {
+    create(data);
+    setIsDialogOpen(false);
+    reset();
+
+    setTimeout(() => {
+      refetch();
+    }, 100);
+  };
+
+  const handleDeleteDeck = (deckId: string) => {
+    if (window.confirm("Tem certeza que deseja excluir este baralho?")) {
+      deleteDeck(deckId);
+      refetch();
+    }
+  };
 
   return (
     <>
-      {/* Background */}
-      <div className="bg-slate-200 min-h-screen">
+      <div className="bg-gradient-to-br from-slate-100 to-slate-200 min-h-screen pb-10">
         <Navbar />
-        <main className="flex flex-col items-center justify-center min-h-scree mt-5 w-full">
-          {/* Barra de pesquisa */}
-          <SearchBar onSearch={handleSearch} />
+        <main className="container mx-auto px-4 pt-8">
+          {/* Mensagem de boas-vindas */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="mb-6 flex flex-col items-start"
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <div className="bg-opacity-10 p-2 rounded-full">
+                <BsExclamationCircle className="text-2xl text-primary" />
+              </div>
+              <h1 className="text-3xl font-bold text-gray-800">
+                Bem-vindo de volta!
+              </h1>
+            </div>
+            <p className="text-gray-600">
+              Aqui estão seus baralhos e cartões para revisar.
+            </p>
+          </motion.div>
 
-          {/* Botão flutuante de adicionar baralho */}
-          <FloatingButton onClick={() => setIsDialogOpen(true)}>
-            <GoPlus className="text-2xl" />
-            Adicionar baralho
-          </FloatingButton>
+          {/* Área de utilitários */}
+          <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
+            <div className="w-full md:w-1/2 lg:w-1/3">
+              <SearchBar
+                onSearch={handleSearch}
+                placeholder="Pesquisar baralhos..."
+                className="w-full"
+              />
+            </div>
+
+            <div className="flex items-center gap-2">
+              {error && (
+                <button
+                  onClick={refetch}
+                  className="flex items-center gap-1 text-primary hover:text-primary-hover"
+                  title="Tentar novamente"
+                >
+                  <BsArrowClockwise className="text-lg" />
+                  Recarregar
+                </button>
+              )}
+
+              <button
+                onClick={() => setIsDialogOpen(true)}
+                className="flex items-center justify-center gap-2 bg-primary text-white py-2 px-4 rounded-lg hover:bg-primary-hover transition-colors duration-300"
+              >
+                <GoPlus className="text-xl" />
+                Novo Baralho
+              </button>
+            </div>
+          </div>
 
           {/* Notificação da quantidade de cartões para revisar */}
-          <ReviewNotification cardCount={cards.length} />
+          {cards.length > 0 && (
+            <div className="mb-6">
+              <ReviewNotification cardCount={cards.length} className="mb-4" />
+            </div>
+          )}
 
           {/* Seção dos baralhos */}
-          <section
-            className={clsx(
-              {
-                "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4":
-                  decks.length > 0,
-              },
-              "flex flex-col items-center justify-center",
-              "bg-white rounded-lg p-10",
-              "overflow-y-scroll",
-              "h-[50vh]",
-              "w-[80%] mt-5"
-            )}
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="bg-white rounded-xl shadow-sm p-6"
           >
-            {/* Card de baralho */}
-            {decks.length === 0 && (
-              <div className="flex flex-col items-center justify-center w-full h-full p-10">
-                <BsExclamationCircle className="text-6xl text-gray-400 mb-4" />
-                <h2 className="text-2xl font-bold text-gray-700 text-center">
-                  Nenhum baralho encontrado
-                </h2>
+            {/* Mostrar mensagem de erro se houver */}
+            {error && (
+              <div className="bg-red-50 text-red-600 p-4 rounded-lg mb-6 flex items-center">
+                <BsExclamationCircle className="mr-2" />
+                <span>{error}</span>
               </div>
             )}
-            {filteredDecks.map((deck) => (
-              <DeckComponent
-                key={deck.id}
-                deck={deck}
-                onDelete={(deckId) => {
-                  deleteDeck(deckId);
-                  navigate(0);
-                }}
-                onView={(deckId) => {
-                  navigate(`/decks/${deckId}`);
-                }}
+
+            {/* Cabeçalho da seção */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+              <h2 className="text-xl font-semibold text-gray-800">
+                {!isLoading &&
+                  filteredDecks.length > 0 &&
+                  `${filteredDecks.length} ${
+                    filteredDecks.length === 1 ? "baralho" : "baralhos"
+                  }`}
+                {isLoading && "Carregando baralhos..."}
+              </h2>
+
+              <div className="flex gap-2">
+                <select
+                  className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5 text-sm"
+                  value={sortOption}
+                  onChange={(e) => {
+                    setSortOption(
+                      e.target.value as
+                        | "recent"
+                        | "alphabetical"
+                        | "byCardCount"
+                    );
+                  }}
+                  disabled={isLoading}
+                >
+                  <option value="recent">Mais recentes</option>
+                  <option value="alphabetical">Nome</option>
+                  <option value="byCardCount">Nº cartões</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Estado de carregamento */}
+            {isLoading ? (
+              <div className="flex justify-center py-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+              </div>
+            ) : filteredDecks.length === 0 ? (
+              <EmptyState
+                icon={
+                  <BsExclamationCircle className="text-4xl text-gray-400" />
+                }
+                title={
+                  searchQuery
+                    ? "Nenhum baralho encontrado"
+                    : "Você ainda não tem baralhos"
+                }
+                description={
+                  searchQuery
+                    ? `Não encontramos baralhos correspondentes a "${searchQuery}".`
+                    : "Crie seu primeiro baralho para começar a estudar."
+                }
+                action={
+                  <button
+                    onClick={() => setIsDialogOpen(true)}
+                    className="flex items-center gap-2 bg-primary text-white py-2 px-4 rounded-lg hover:bg-primary-hover transition-colors"
+                  >
+                    <GoPlus />
+                    Criar meu primeiro baralho
+                  </button>
+                }
               />
-            ))}
-          </section>
+            ) : (
+              <AnimatePresence mode="popLayout">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  {filteredDecks.map((deck) => (
+                    <motion.div
+                      key={deck.id}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      transition={{ duration: 0.2 }}
+                      layout
+                    >
+                      <DeckComponent
+                        deck={deck}
+                        onDelete={handleDeleteDeck}
+                        onView={(deckId) => {
+                          navigate(`/decks/${deckId}`);
+                        }}
+                      />
+                    </motion.div>
+                  ))}
+                </div>
+              </AnimatePresence>
+            )}
+          </motion.section>
 
           <Dialog onClose={() => setIsDialogOpen(false)} isOpen={isDialogOpen}>
-            <h2 className="text-2xl font-bold mb-4">Criar baralho</h2>
-            <form
-              onSubmit={handleSubmit((data) => {
-                create(data);
-                setIsDialogOpen(false);
-                navigate(0);
-              })}
-            >
+            <div className="flex items-center mb-4">
+              <GoPlus className="text-3xl text-primary" />
+              <h2 className="text-xl font-semibold text-gray-800 ml-2">
+                Criar novo baralho
+              </h2>
+            </div>
+            <form onSubmit={handleSubmit(handleCreateDeck)}>
               <div className="mb-4">
                 <label
                   htmlFor="name"
-                  className="block text-gray-700 font-bold mb-2"
+                  className="block text-gray-700 font-medium mb-2"
                 >
                   Nome do baralho
                 </label>
                 <input
                   type="text"
                   id="name"
+                  placeholder="Ex: Matemática Básica"
                   {...register("name", {
                     required: "Nome é obrigatório",
                     minLength: {
@@ -142,9 +276,10 @@ export default function Page() {
                     },
                   })}
                   className={clsx(
-                    "border rounded-lg p-2 w-full",
+                    "border rounded-lg p-2.5 w-full bg-gray-50",
                     {
-                      "border-red-500": errors.name && touchedFields.name,
+                      "border-red-500 ring-1 ring-red-500":
+                        errors.name && touchedFields.name,
                       "border-gray-300": !errors.name,
                     },
                     "focus:outline-none focus:ring-2 focus:ring-primary"
@@ -157,29 +292,40 @@ export default function Page() {
                   </div>
                 )}
               </div>
-              <div className="mb-4">
+              <div className="mb-6">
                 <label
                   htmlFor="description"
-                  className="block text-gray-700 font-bold mb-2"
+                  className="block text-gray-700 font-medium mb-2"
                 >
-                  Descrição
+                  Descrição{" "}
+                  <span className="text-gray-400 text-xs">(opcional)</span>
                 </label>
                 <textarea
                   id="description"
+                  placeholder="Descreva o conteúdo deste baralho..."
                   {...register("description")}
-                  className="border border-gray-300 rounded-lg p-2 w-full h-24 resize-none focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="border border-gray-300 rounded-lg p-2.5 w-full h-28 resize-none bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary"
                 />
               </div>
-              <button
-                type="submit"
-                disabled={!isValid}
-                className={clsx("bg-primary text-white rounded-lg px-4 py-2", {
-                  "opacity-50 cursor-not-allowed": !isValid,
-                  "hover:bg-primary-hover cursor-pointer": isValid,
-                })}
-              >
-                Criar baralho
-              </button>
+              <div className="flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsDialogOpen(false)}
+                  className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  disabled={!isValid}
+                  className={clsx("px-4 py-2 rounded-lg text-white", {
+                    "bg-primary hover:bg-primary-hover cursor-pointer": isValid,
+                    "bg-gray-400 cursor-not-allowed": !isValid,
+                  })}
+                >
+                  Criar baralho
+                </button>
+              </div>
             </form>
           </Dialog>
         </main>
