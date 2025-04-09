@@ -118,8 +118,8 @@ Tela de Baralhos Revisão de Flashcards Perfil do Usuário
       <td><img src="screenshots/tela_de_baralhos_mobile.png" alt="Tela de Baralhos - Mobile" width="200" /></td>
     </tr>
     <tr>
-      <td><img src="screenshots/tela_de_revisao_desktop.png" alt="Tela de Revisão - Desktop" /></td>
-      <td><img src="screenshots/tela_de_revisao_mobile.png" alt="Tela de Revisão - Mobile" width="200" /></td>
+      <td><img src="screenshots/tela_de_revisão_desktop.png" alt="Tela de Revisão - Desktop" /></td>
+      <td><img src="screenshots/tela_de_revisão_mobile.png" alt="Tela de Revisão - Mobile" width="200" /></td>
     </tr>
     <tr>
       <td><img src="screenshots/tela_de_perfil_desktop.png" alt="Tela de Perfil - Desktop" /></td>
