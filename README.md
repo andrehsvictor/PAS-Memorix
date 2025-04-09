@@ -103,8 +103,6 @@ npm run build
 
 ## 📱 Screenshots <a name="screenshots"></a>
 
-Tela de Baralhos Revisão de Flashcards Perfil do Usuário
-
 <table>
   <thead>
     <tr>
