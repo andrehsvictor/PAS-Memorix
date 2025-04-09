@@ -36,7 +36,7 @@ export default function Page() {
 
   const { create } = useCreateDeck();
   const { deleteDeck } = useDeleteDeck();
-  const { cards, fetchCardsToReview } = useReviewContext();
+  const { cards, fetchCardsToReview, getCardsDueToday } = useReviewContext();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
 
@@ -71,13 +71,14 @@ export default function Page() {
     }
   };
 
-  if (!isAuthenticated) {
-    navigate("/login");
-    return null;
-  }
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/login");
+    }
+  }, [isAuthenticated, navigate]);
 
   useEffect(() => {
-    fetchCardsToReview(true);
+    fetchCardsToReview();
   }, [fetchCardsToReview]);
 
   return (
@@ -93,7 +94,7 @@ export default function Page() {
           onNewDeck={() => setIsDialogOpen(true)}
         />
 
-        {cards.length > 0 && (
+        {getCardsDueToday() > 0 && (
           <ReviewNotification cardCount={cards.length} className="mb-5" />
         )}
 
