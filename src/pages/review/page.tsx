@@ -28,11 +28,9 @@ export default function ReviewPage() {
     fetchCardsToReview,
   } = useReviewContext();
 
-  // Flag para evitar múltiplas chamadas do fetchCardsToReview
   const [hasInitialized, setHasInitialized] = useState(false);
 
   useEffect(() => {
-    // Garantir que buscamos os cartões apenas uma vez na montagem do componente
     if (!hasInitialized) {
       fetchCardsToReview(true);
       setHasInitialized(true);

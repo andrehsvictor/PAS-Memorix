@@ -1,6 +1,7 @@
-import { useEffect, useState, useCallback } from "react";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import { AnimatePresence, motion } from "framer-motion";
+import { useCallback, useEffect, useState } from "react";
 import { BiTrash } from "react-icons/bi";
 import {
   BsArrowLeft,
@@ -10,6 +11,7 @@ import {
 } from "react-icons/bs";
 import { GoPlus } from "react-icons/go";
 import { PiPencil } from "react-icons/pi";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import FloatingButton from "../../components/floating-button";
 import Navbar from "../../components/navbar";
 import useCreateCard from "../../hooks/useCreateCard";
@@ -25,9 +27,6 @@ import CardsTable from "./components/cards-table";
 import CreateCardDialog from "./components/create-card-dialog";
 import EditCardDialog from "./components/edit-card-dialog";
 import EditDeckDialog from "./components/edit-deck-dialog";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
-import { useAuth } from "../../contexts/auth-context";
 
 export default function Page() {
   const { id } = useParams<{ id: string }>();
@@ -41,7 +40,6 @@ export default function Page() {
   const { createCard } = useCreateCard();
   const { deleteDeck } = useDeleteDeck();
   const { editDeck } = useEditDeck();
-  const { isAuthenticated } = useAuth();
 
   const [isCreateCardDialogOpen, setIsCreateCardDialogOpen] = useState(false);
   const [isEditCardDialogOpen, setIsEditCardDialogOpen] = useState(false);
@@ -50,7 +48,6 @@ export default function Page() {
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // CORREÇÃO: Memoize a função de busca do baralho
   const fetchDeck = useCallback(() => {
     if (!id || id === "" || id === "undefined") {
       setDeck(null);
@@ -60,11 +57,9 @@ export default function Page() {
     setDeck(fetchedDeck);
   }, [id, fetchDeckById]);
 
-  // CORREÇÃO: Memoize a função de busca de cartões
   const fetchCards = useCallback(() => {
     if (!id) return;
 
-    // Buscar cards usando id em vez de deck.id
     const fetchedCards = fetchCardsByDeckId(id);
     setCards(fetchedCards);
   }, [id, fetchCardsByDeckId]);
@@ -74,14 +69,10 @@ export default function Page() {
     fetchDeck();
   }, [fetchDeck]);
 
-  // Carregar dados do baralho - agora com dependência corrigida
-
-  // Carregar cartões do baralho - agora com dependência corrigida
   useEffect(() => {
     fetchCards();
   }, [fetchCards]);
 
-  // Filtrar cartões baseado na pesquisa - sem mudanças
   const filteredCards = searchQuery
     ? cards.filter(
         (card) =>
@@ -90,7 +81,6 @@ export default function Page() {
       )
     : cards;
 
-  // Manipuladores de eventos - sem mudanças
   const handleCreateCard = (data: { question: string; answer: string }) => {
     const newCard = createCard(id || "", {
       question: data.question,
@@ -226,11 +216,6 @@ export default function Page() {
         </div>
       </div>
     );
-  }
-
-  if (!isAuthenticated) {
-    navigate("/login");
-    return null;
   }
 
   return (

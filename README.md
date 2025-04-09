@@ -100,3 +100,22 @@ npm run dev
 # Para gerar uma build de produção
 npm run build
 ```
+
+## 📱 Screenshots <a name="screenshots"></a>
+
+Tela de Baralhos Revisão de Flashcards Perfil do Usuário
+
+<table>
+  <thead>
+    <tr>
+      <th>Desktop</th>
+      <th>Mobile</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><img src="screenshots/tela_de_baralhos_desktop.png" alt="Tela de Baralhos - Desktop" /></td>
+      <td><img src="screenshots/tela_de_baralhos_mobile.png" alt="Tela de Baralhos - Mobile" width="100" /></td>
+    </tr>
+  </tbody>
+</table>

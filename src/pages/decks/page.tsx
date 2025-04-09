@@ -2,16 +2,15 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/navbar";
-import { useAuth } from "../../contexts/auth-context";
 import { useReviewContext } from "../../contexts/review-context";
 import useCreateDeck from "../../hooks/useCreateDeck";
 import useDeleteDeck from "../../hooks/useDeleteDeck";
 import useFetchDecks from "../../hooks/useFetchDecks";
 import CreateDeckDialog from "./components/create-deck-dialog";
 import DecksList from "./components/decks-list";
+import ReviewNotification from "./components/review-notification";
 import UtilitiesBar from "./components/utilities-bar";
 import WelcomeSection from "./components/welcome-section";
-import ReviewNotification from "./components/review-notification";
 
 interface CreateDeckFormProps {
   name: string;
@@ -38,7 +37,6 @@ export default function Page() {
   const { deleteDeck } = useDeleteDeck();
   const { cards, fetchCardsToReview, getCardsDueToday } = useReviewContext();
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
 
   const getSortedDecks = () => {
     return sortedDecks[sortOption];
@@ -70,12 +68,6 @@ export default function Page() {
       refetch();
     }
   };
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate("/login");
-    }
-  }, [isAuthenticated, navigate]);
 
   useEffect(() => {
     fetchCardsToReview();

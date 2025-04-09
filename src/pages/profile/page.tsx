@@ -2,7 +2,7 @@ import clsx from "clsx";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { BiLogOut } from "react-icons/bi";
 import {
   BsArrowLeft,
@@ -13,7 +13,7 @@ import {
 } from "react-icons/bs";
 import { GoXCircle } from "react-icons/go";
 import { PiPencil } from "react-icons/pi";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Navbar from "../../components/navbar";
 import { useAuth } from "../../contexts/auth-context";
 import useFetchDecks from "../../hooks/useFetchDecks";
@@ -21,7 +21,6 @@ import Dialog from "../decks/components/dialog";
 
 export default function Page() {
   const { user, logout, updateUserProfile } = useAuth();
-  const navigate = useNavigate();
   const { decks } = useFetchDecks();
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isConfirmLogoutOpen, setIsConfirmLogoutOpen] = useState(false);
@@ -35,13 +34,6 @@ export default function Page() {
     name?: string;
     email?: string;
   }>({});
-
-  // Redirecionar para login se não estiver autenticado
-  useEffect(() => {
-    if (!user) {
-      navigate("/login");
-    }
-  }, [user, navigate]);
 
   // Calcular estatísticas
   const stats = {
