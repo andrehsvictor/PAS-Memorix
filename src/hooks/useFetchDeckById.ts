@@ -2,8 +2,8 @@ import { useCallback, useState } from 'react';
 import Deck from '../types/deck';
 
 export default function useFetchDeckById() {
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const [loading] = useState(false);
+    const [error] = useState<string | null>(null);
 
     const fetchDeckById = useCallback((deckId: string): Deck | undefined => {
         if (!deckId) return undefined;

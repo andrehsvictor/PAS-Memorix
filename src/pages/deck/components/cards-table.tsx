@@ -1,10 +1,9 @@
+import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { BiTrash, BiSearch } from "react-icons/bi";
+import { BiSearch, BiTrash } from "react-icons/bi";
+import { BsChevronDown, BsChevronExpand, BsChevronUp } from "react-icons/bs";
 import { PiPencil } from "react-icons/pi";
-import { BsChevronUp, BsChevronDown, BsChevronExpand } from "react-icons/bs";
 import Card from "../../../types/card";
-import clsx from "clsx";
 
 interface CardsTableProps {
   cards: Card[];

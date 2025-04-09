@@ -320,35 +320,6 @@ export default function Page() {
                 )}
               </div>
 
-              {/* Termos de uso */}
-              <div className="flex items-start">
-                <div className="flex items-center h-5">
-                  <input
-                    id="terms"
-                    type="checkbox"
-                    className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded accent-primary"
-                  />
-                </div>
-                <div className="ml-3 text-sm">
-                  <label htmlFor="terms" className="text-gray-600">
-                    Concordo com os{" "}
-                    <a
-                      href="#"
-                      className="text-primary hover:text-primary-hover"
-                    >
-                      Termos de Serviço
-                    </a>{" "}
-                    e{" "}
-                    <a
-                      href="#"
-                      className="text-primary hover:text-primary-hover"
-                    >
-                      Política de Privacidade
-                    </a>
-                  </label>
-                </div>
-              </div>
-
               {/* Botão de cadastro */}
               <button
                 type="submit"

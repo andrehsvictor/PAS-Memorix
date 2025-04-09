@@ -3,13 +3,13 @@ import { ptBR } from "date-fns/locale";
 import { motion } from "framer-motion";
 import { useMemo, useState } from "react";
 import {
-    BsArrowRightCircle,
-    BsBarChart,
-    BsCalendar3,
-    BsClockHistory,
-    BsGem,
-    BsLightning,
-    BsStars,
+  BsArrowRightCircle,
+  BsBarChart,
+  BsCalendar3,
+  BsClockHistory,
+  BsGem,
+  BsLightning,
+  BsStars,
 } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../../contexts/auth-context";
@@ -85,7 +85,6 @@ export default function WelcomeSection() {
               sortedDays.includes(yesterdayStr)
             ) {
               streak = 1;
-              let lastDate = sortedDays.includes(today) ? today : yesterdayStr;
 
               for (let i = 1; i < 100; i++) {
                 const checkDate = new Date();

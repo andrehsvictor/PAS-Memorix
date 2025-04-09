@@ -79,7 +79,7 @@ export default function Page() {
       if (result.success) {
         setIsEditDialogOpen(false);
       } else {
-        setErrors({ ...errors, ...result.error });
+        setErrors({ ...errors });
       }
     } catch (error) {
       console.error("Erro ao atualizar perfil:", error);

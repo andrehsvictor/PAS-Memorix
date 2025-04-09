@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/navbar";
@@ -19,7 +19,7 @@ interface CreateDeckFormProps {
 }
 
 export default function Page() {
-  const { decks, isLoading, error, refetch, sortedDecks } = useFetchDecks();
+  const { isLoading, error, refetch, sortedDecks } = useFetchDecks();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [sortOption, setSortOption] = useState<
     "recent" | "alphabetical" | "byCardCount"
@@ -36,7 +36,7 @@ export default function Page() {
 
   const { create } = useCreateDeck();
   const { deleteDeck } = useDeleteDeck();
-  const { cards } = useReviewContext();
+  const { cards, fetchCardsToReview } = useReviewContext();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
 
@@ -75,6 +75,10 @@ export default function Page() {
     navigate("/login");
     return null;
   }
+
+  useEffect(() => {
+    fetchCardsToReview(true);
+  }, [fetchCardsToReview]);
 
   return (
     <div className="bg-gradient-to-br from-slate-100 to-slate-200 min-h-screen pb-10">
