@@ -88,8 +88,8 @@ Com uma interface intuitiva e responsiva, o Memorix permite que você organize s
 
 ```bash
 # Clone o repositório
-git clone https://github.com/seu-usuario/memorix.git
-cd memorix
+git clone https://github.com/andrehsvictor/PAS-Memorix.git
+cd PAS-Memorix
 
 # Instale as dependências
 npm install
@@ -116,6 +116,14 @@ Tela de Baralhos Revisão de Flashcards Perfil do Usuário
     <tr>
       <td><img src="screenshots/tela_de_baralhos_desktop.png" alt="Tela de Baralhos - Desktop" /></td>
       <td><img src="screenshots/tela_de_baralhos_mobile.png" alt="Tela de Baralhos - Mobile" width="200" /></td>
+    </tr>
+    <tr>
+      <td><img src="screenshots/tela_de_revisao_desktop.png" alt="Tela de Revisão - Desktop" /></td>
+      <td><img src="screenshots/tela_de_revisao_mobile.png" alt="Tela de Revisão - Mobile" width="200" /></td>
+    </tr>
+    <tr>
+      <td><img src="screenshots/tela_de_perfil_desktop.png" alt="Tela de Perfil - Desktop" /></td>
+      <td><img src="screenshots/tela_de_perfil_mobile.png" alt="Tela de Perfil - Mobile" width="200" /></td>
     </tr>
   </tbody>
 </table>
